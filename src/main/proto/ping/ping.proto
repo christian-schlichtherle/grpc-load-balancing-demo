@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ping;
+
+service Service {
+    rpc SinglePing (Request) returns (Response);
+    rpc StreamingPing (stream Request) returns (stream Response);
+}
+
+message Request {
+    string message = 1;
+}
+
+message Response {
+    string message = 1;
+    string server_address = 2;
+    int32 server_port = 3;
+}
