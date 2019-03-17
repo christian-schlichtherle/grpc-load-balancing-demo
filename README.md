@@ -43,8 +43,8 @@ To set-up an attachable overlay network for testing:
 
 To create the servers for both Reactor-gRPC and RxgRPC:
 
-    $ docker service create --name reactor-server --replicas 4 --network test-net --endpoint-mode dnsrr reactor-server
-    $ docker service create --name rx-server --replicas 4 --network test-net --endpoint-mode dnsrr rx-server
+    $ docker service create --replicas 4 --network test-net --endpoint-mode dnsrr --name reactor-server reactor-server
+    $ docker service create --replicas 4 --network test-net --endpoint-mode dnsrr --name rx-server rx-server
 
 Note that the containers must be put on the overlay network (`test-net` in this example) and the endpoint-mode must be 
 `dnsrr`.
