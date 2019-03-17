@@ -91,3 +91,37 @@ To let it talk to the Rx-servers instead:
     $ docker run --interactive --tty --rm --network test-net rx-client rx-server
 
 The behavior is the same as before, so the output is not shown here.
+
+### Scaling the Servers
+
+While the clients are running, you can down-scale or up-scale the number of server instances.
+When you decrease the number of server instances, the clients will immediately recognize the change:
+
+    $ docker service update --replicas 2 reactor-server
+    $ docker service update --replicas 2 rx-server
+
+When you increase the number of server instances however, the client will only _eventually_ recognize the change:
+
+    $ docker service update --replicas 4 reactor-server
+    $ docker service update --replicas 4 rx-server
+
+When following this example, a client session may look like this:
+
+```bash
+$ docker run --interactive --tty --rm --network test-net rx-client rx-server
+[10.0.0.19,24]
+[10.0.0.22,24]
+[10.0.0.21,24]
+[10.0.0.20,28]
+Repeat? [YES|no] 
+[10.0.0.19,52]
+[10.0.0.20,48]
+Repeat? [YES|no] 
+[10.0.0.19,24]
+[10.0.0.35,24]
+[10.0.0.34,28]
+[10.0.0.20,24]
+Repeat? [YES|no] no
+```
+
+Note the change of the IP addresses after scaling up.
