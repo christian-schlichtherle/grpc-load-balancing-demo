@@ -37,24 +37,16 @@ To set-up a Docker swarm:
 
     $ docker swarm init
 
-To set-up an attachable overlay network for testing:
+To deploy the Docker stack:
 
-    $ docker network create --driver overlay --attachable test-net 
-
-To create the servers for both Reactor-gRPC and RxgRPC:
-
-    $ docker service create --replicas 4 --network test-net --endpoint-mode dnsrr --name reactor-server reactor-server
-    $ docker service create --replicas 4 --network test-net --endpoint-mode dnsrr --name rx-server rx-server
-
-Note that the containers must be put on the overlay network (`test-net` in this example) and the endpoint-mode must be 
-`dnsrr`.
+    $ docker stack deploy --compose-file docker-compose.yml demo
 
 ### Running the Clients
 
 To run the Reactor-client and let it talk to the Reactor-servers:
 
 ```bash
-$ docker run --interactive --tty --rm --network test-net reactor-client reactor-server
+$ docker run --interactive --tty --rm --network demo_default reactor-client reactor-server
 [DEBUG] (main) Using Console logging
 [10.0.0.17,24]
 [10.0.0.16,24]
@@ -70,7 +62,7 @@ it has processed.
 To let the same client talk to the Rx-servers instead:
 
 ```bash
-$ docker run --interactive --tty --rm --network test-net reactor-client rx-server
+$ docker run --interactive --tty --rm --network demo_default reactor-client rx-server
 [DEBUG] (main) Using Console logging
 [10.0.0.19,28]
 [10.0.0.22,24]
@@ -84,11 +76,11 @@ Note the different IP addresses.
 You can also repeat the same experiment with the Rx-client instead.
 To let it talk to the Reactor-servers:
 
-    $ docker run --interactive --tty --rm --network test-net rx-client reactor-server
+    $ docker run --interactive --tty --rm --network demo_default rx-client reactor-server
 
 To let it talk to the Rx-servers instead:
 
-    $ docker run --interactive --tty --rm --network test-net rx-client rx-server
+    $ docker run --interactive --tty --rm --network demo_default rx-client rx-server
 
 The behavior is the same as before, so the output is not shown here.
 
@@ -97,18 +89,18 @@ The behavior is the same as before, so the output is not shown here.
 While the clients are running, you can down-scale or up-scale the number of server instances.
 When you decrease the number of server instances, the clients will immediately recognize the change:
 
-    $ docker service update --replicas 2 reactor-server
-    $ docker service update --replicas 2 rx-server
+    $ docker service update --replicas 2 demo_reactor-server
+    $ docker service update --replicas 2 demo_rx-server
 
 When you increase the number of server instances however, the client will only _eventually_ recognize the change:
 
-    $ docker service update --replicas 4 reactor-server
-    $ docker service update --replicas 4 rx-server
+    $ docker service update --replicas 4 demo_reactor-server
+    $ docker service update --replicas 4 demo_rx-server
 
 When following this example, a client session may look like this:
 
 ```bash
-$ docker run --interactive --tty --rm --network test-net rx-client rx-server
+$ docker run --interactive --tty --rm --network demo_default rx-client rx-server
 [10.0.0.19,24]
 [10.0.0.22,24]
 [10.0.0.21,24]

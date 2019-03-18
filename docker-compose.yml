@@ -1,0 +1,15 @@
+networks:
+  default:
+    attachable: true
+services:
+  reactor-server:
+    deploy:
+      endpoint_mode: dnsrr
+      replicas: 4
+    image: reactor-server
+  rx-server:
+    deploy:
+      endpoint_mode: dnsrr
+      replicas: 4
+    image: rx-server
+version: '3.3'
