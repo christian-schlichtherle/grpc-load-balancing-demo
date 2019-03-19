@@ -3,10 +3,10 @@ package ping;
 import io.grpc.ManagedChannel;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
-import reactor.util.function.Tuples;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static ping.Ping.Request;
 import static ping.Ping.Response;
 import static ping.ReactorServiceGrpc.ReactorServiceStub;
@@ -29,9 +29,9 @@ public class ReactorClient extends AbstractClient {
                 .map(request -> service.singlePing(request).block())
                 .sequential()
                 .groupBy(Response::getServerAddress)
-                .flatMap(group -> group.count().map(count -> Tuples.of(group.key(), count)))
+                .flatMap(group -> group.count().map(count -> format("Received %d responses from server %s.", count, group.key())))
                 .toStream()
-                .forEach(System.out::println);
+                .forEach(log::info);
         Schedulers.shutdownNow();
     }
 }

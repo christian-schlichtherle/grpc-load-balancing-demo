@@ -2,17 +2,18 @@ package ping;
 
 import io.grpc.BindableService;
 import io.grpc.ServerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import static ping.Ping.Request;
 import static ping.Ping.Response;
 
 abstract class AbstractServer {
 
-    private static final Logger logger = Logger.getLogger(AbstractServer.class.getName());
+    final Logger log = LoggerFactory.getLogger(getClass());
 
     final void run(final String... args) throws Exception {
         // TODO: This isn't necessarily exactly the same IP address as for which a Request was received:
@@ -29,9 +30,9 @@ abstract class AbstractServer {
                 .addService(service)
                 .build()
                 .start();
-        logger.info("Listening on " + server.getPort());
+        log.info("Listening on port {}.", server.getPort());
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            logger.info("Shutting down");
+            log.info("Shutting down.");
             server.shutdown();
         }));
         server.awaitTermination();

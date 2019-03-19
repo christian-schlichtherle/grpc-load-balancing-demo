@@ -2,19 +2,20 @@ package ping;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.lang.System.console;
-import static java.lang.Thread.currentThread;
-import static java.lang.Thread.interrupted;
-import static java.util.Optional.ofNullable;
 import static ping.Ping.Request;
 
 abstract class AbstractClient {
+
+    final Logger log = LoggerFactory.getLogger(getClass());
 
     final void run(final String... args) {
         final int requestCount = args.length > 1 ? Integer.parseInt(args[1]) : 100;
@@ -31,17 +32,32 @@ abstract class AbstractClient {
                 .defaultLoadBalancingPolicy("round_robin")
                 .usePlaintext()
                 .build();
-        do {
-            run(channel, requests);
-
-            // Required to make the client aware of new servers if the "round_robin" client-side load-balancing policy
-            // is used and the number of servers is SCALED UP:
-            channel.enterIdle();
-        } while (!interrupted() && repeat());
+        final CountDownLatch
+                shutdownInitiated = new CountDownLatch(1),
+                shutdownCompleted = new CountDownLatch(1);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("Shutting down.");
+            shutdownInitiated.countDown();
+            try {
+                shutdownCompleted.await(6, TimeUnit.SECONDS);
+            } catch (InterruptedException ignored) {
+            }
+        }));
         try {
-            channel.shutdown().awaitTermination(3, TimeUnit.SECONDS);
+            try {
+                do {
+                    run(channel, requests);
+
+                    // Required to make the client aware of new servers if the "round_robin" client-side load-balancing
+                    // policy is used and the number of servers is SCALED UP:
+                    channel.enterIdle();
+                } while (!shutdownInitiated.await(2, TimeUnit.SECONDS));
+            } finally {
+                channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+            }
         } catch (InterruptedException ignored) {
-            currentThread().interrupt();
+        } finally {
+            shutdownCompleted.countDown();
         }
     }
 
@@ -50,15 +66,4 @@ abstract class AbstractClient {
     }
 
     abstract void run(ManagedChannel channel, List<Request> requests);
-
-    private static boolean repeat() {
-        String input;
-        do {
-            input = ofNullable(console())
-                    .flatMap(c -> ofNullable(c.printf("Repeat? [YES|no] ").readLine()))
-                    .orElse("n")
-                    .trim();
-        } while (!input.matches("(?i)y(es)?|no?|"));
-        return !input.matches("(?i)no?");
-    }
 }

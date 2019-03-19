@@ -6,6 +6,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static ping.Ping.Request;
 import static ping.Ping.Response;
 import static ping.RxServiceGrpc.RxServiceStub;
@@ -29,8 +30,8 @@ public class RxClient extends AbstractClient {
                 .map(request -> service.singlePing(request).blockingGet())
                 .sequential()
                 .groupBy(Response::getServerAddress)
-                .flatMap(group -> group.count().map(count -> String.format("[%s,%d]", group.getKey(), count)).toFlowable())
-                .blockingSubscribe(System.out::println);
+                .flatMap(group -> group.count().map(count -> format("Received %d responses from server %s.", count, group.getKey())).toFlowable())
+                .blockingSubscribe(log::info);
         Schedulers.shutdown();
     }
 }
