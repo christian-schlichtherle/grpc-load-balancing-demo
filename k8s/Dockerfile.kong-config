@@ -1,0 +1,8 @@
+FROM jess/httpie
+
+ARG API
+ENV API=$API
+
+COPY docker-entrypoint-kong-config.sh /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
