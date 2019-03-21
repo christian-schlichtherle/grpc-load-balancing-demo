@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactor-client
+spec:
+  selector:
+    matchLabels:
+      app: reactor-client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reactor-client
+    spec:
+      containers:
+      - name: reactor-client
+        image: reactor-client
+        imagePullPolicy: Never
+        args: [ "reactor-server" ]

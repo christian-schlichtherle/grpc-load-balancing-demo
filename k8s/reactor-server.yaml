@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactor-server
+spec:
+  selector:
+    matchLabels:
+      app: reactor-server
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: reactor-server
+    spec:
+      containers:
+      - name: reactor-server
+        image: reactor-server
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reactor-server
+spec:
+  type: NodePort
+  ports:
+  - name: reactor-server
+    port: 50505
+    targetPort: 50505
+    protocol: TCP
+  selector:
+    app: reactor-server

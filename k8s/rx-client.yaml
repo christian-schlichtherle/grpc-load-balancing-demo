@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rx-client
+spec:
+  selector:
+    matchLabels:
+      app: rx-client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rx-client
+    spec:
+      containers:
+      - name: rx-client
+        image: rx-client
+        imagePullPolicy: Never
+        args: [ "rx-server" ]

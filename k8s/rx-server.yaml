@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rx-server
+spec:
+  selector:
+    matchLabels:
+      app: rx-server
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: rx-server
+    spec:
+      containers:
+      - name: rx-server
+        image: rx-server
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rx-server
+spec:
+  type: NodePort
+  ports:
+  - name: rx-server
+    port: 50505
+    targetPort: 50505
+    protocol: TCP
+  selector:
+    app: rx-server
