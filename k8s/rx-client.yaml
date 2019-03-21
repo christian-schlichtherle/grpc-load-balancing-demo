@@ -29,11 +29,7 @@ spec:
             add:
             - NET_ADMIN
       containers:
-      - name: reactor-server
-        image: rx-client
-        imagePullPolicy: Never
-        args: [ "reactor-server" ]
-      - name: rx-server
+      - name: rx-client
         image: rx-client
         imagePullPolicy: Never
         args: [ "rx-server" ]

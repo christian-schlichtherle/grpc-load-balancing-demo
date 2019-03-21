@@ -29,14 +29,10 @@ spec:
             add:
             - NET_ADMIN
       containers:
-      - name: reactor-server
+      - name: reactor-client
         image: reactor-client
         imagePullPolicy: Never
         args: [ "reactor-server" ]
-      - name: rx-server
-        image: reactor-client
-        imagePullPolicy: Never
-        args: [ "rx-server" ]
       - name: kong
         image: kong
         securityContext:
