@@ -31,7 +31,7 @@ implementations of the client and server using
 
     $ ./build.sh
 
-### Deploying The Servers
+### Deploying The Stack
 
 To set-up a Docker swarm:
 
@@ -41,48 +41,27 @@ To deploy the Docker stack:
 
     $ docker stack deploy --compose-file docker-compose.yml demo
 
-### Running the Clients
+### Checking the Client Logs
 
-To run the Reactor-client and let it talk to the Reactor-servers:
+To watch the log of the Reactor-client:
 
-```bash
-$ docker run --interactive --tty --rm --network demo_default reactor-client reactor-server
-[DEBUG] (main) Using Console logging
-[10.0.0.17,24]
-[10.0.0.16,24]
-[10.0.0.15,24]
-[10.0.0.14,28]
-Repeat? [YES|no] no
-```
+    $ docker logs --follow $(docker ps --filter name=reactor-client --format '{{.ID}}')
+    09:55:12.072 [main] INFO  ping.ReactorClient - Received 24 responses from server 10.0.17.5.
+    09:55:12.072 [main] INFO  ping.ReactorClient - Received 24 responses from server 10.0.17.6.
+    09:55:12.072 [main] INFO  ping.ReactorClient - Received 28 responses from server 10.0.17.7.
+    09:55:12.072 [main] INFO  ping.ReactorClient - Received 24 responses from server 10.0.17.8.
+    09:55:14.226 [main] INFO  ping.ReactorClient - Received 47 responses from server 10.0.17.5.
+    09:55:14.226 [main] INFO  ping.ReactorClient - Received 18 responses from server 10.0.17.6.
+    09:55:14.226 [main] INFO  ping.ReactorClient - Received 17 responses from server 10.0.17.7.
+    09:55:14.226 [main] INFO  ping.ReactorClient - Received 18 responses from server 10.0.17.8.
 
-This example sends 100 requests to the four server instances (on as many threads as the client has CPUs).
+The client sends 100 requests to the four server instances (on as many threads as the client has CPUs).
 The output is a list of tuples which show the IP address of each responding server and the number of requests/responses 
 it has processed.
 
-To let the same client talk to the Rx-servers instead:
+To check the log of the Rx-server:
 
-```bash
-$ docker run --interactive --tty --rm --network demo_default reactor-client rx-server
-[DEBUG] (main) Using Console logging
-[10.0.0.19,28]
-[10.0.0.22,24]
-[10.0.0.21,24]
-[10.0.0.20,24]
-Repeat? [YES|no] 
-```
-
-Note the different IP addresses.
-
-You can also repeat the same experiment with the Rx-client instead.
-To let it talk to the Reactor-servers:
-
-    $ docker run --interactive --tty --rm --network demo_default rx-client reactor-server
-
-To let it talk to the Rx-servers instead:
-
-    $ docker run --interactive --tty --rm --network demo_default rx-client rx-server
-
-The behavior is the same as before, so the output is not shown here.
+    $ docker logs --follow $(docker ps --filter name=rx-client --format '{{.ID}}')
 
 ### Scaling the Servers
 
@@ -97,23 +76,8 @@ When you increase the number of server instances however, the client will only _
     $ docker service update --replicas 4 demo_reactor-server
     $ docker service update --replicas 4 demo_rx-server
 
-When following this example, a client session may look like this:
+When following this example, the logging output will change accordingly.
 
-```bash
-$ docker run --interactive --tty --rm --network demo_default rx-client rx-server
-[10.0.0.19,24]
-[10.0.0.22,24]
-[10.0.0.21,24]
-[10.0.0.20,28]
-Repeat? [YES|no] 
-[10.0.0.19,52]
-[10.0.0.20,48]
-Repeat? [YES|no] 
-[10.0.0.19,24]
-[10.0.0.35,24]
-[10.0.0.34,28]
-[10.0.0.20,24]
-Repeat? [YES|no] no
-```
+### Removing the Stack
 
-Note the change of the IP addresses after scaling up.
+    $ docker stack rm demo
