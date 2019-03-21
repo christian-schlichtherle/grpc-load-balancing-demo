@@ -22,7 +22,7 @@ kind: Service
 metadata:
   name: reactor-server
 spec:
-  type: NodePort
+  clusterIP: None
   ports:
   - name: reactor-server
     port: 50505

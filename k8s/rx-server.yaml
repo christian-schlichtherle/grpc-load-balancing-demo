@@ -22,7 +22,7 @@ kind: Service
 metadata:
   name: rx-server
 spec:
-  type: NodePort
+  clusterIP: None
   ports:
   - name: rx-server
     port: 50505
