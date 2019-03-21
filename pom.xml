@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>global.namespace.poc</groupId>
-    <artifactId>grpc-round-robin-load-balancing-demo</artifactId>
+    <artifactId>grpc-load-balancing-demo</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
     <properties>
