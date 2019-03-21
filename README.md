@@ -1,6 +1,6 @@
-# gRPC Round Robin Load Balancing Demo
+# gRPC Load Balancing Demo
 
-This project demonstrates how to apply a DNS Round Robin load-balancing policy for gRPC.
+This project demonstrates how to implement a load-balancing strategy for gRPC.
 
 The project contains a simple, ping-like streaming service ([`ping.proto`](src/main/proto/ping/ping.proto)), and 
 implementations of the client and server using
