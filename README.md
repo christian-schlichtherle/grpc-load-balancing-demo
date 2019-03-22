@@ -45,7 +45,7 @@ To deploy the Docker stack:
 
     $ docker stack deploy --compose-file swarm/docker-compose.yml demo
 
-To check the deployment:
+To check the deployments:
 
     $ docker service ls
 
@@ -111,9 +111,9 @@ To deploy the stack:
 
     $ make --directory k8s
 
-To check the deployment:
+To check the deployments:
 
-    $ kubectl get deployment
+    $ kubectl get deployments
 
 Repeat until the AVAILABLE numbers match the DESIRED numbers.
 
