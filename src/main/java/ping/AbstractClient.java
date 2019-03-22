@@ -1,5 +1,6 @@
 package ping;
 
+import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.slf4j.Logger;
@@ -65,5 +66,5 @@ abstract class AbstractClient {
         return Request.newBuilder().setMessage(Integer.toString(i)).build();
     }
 
-    abstract void run(ManagedChannel channel, List<Request> requests);
+    abstract void run(Channel channel, List<Request> requests);
 }

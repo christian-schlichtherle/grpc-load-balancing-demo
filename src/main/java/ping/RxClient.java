@@ -1,6 +1,6 @@
 package ping;
 
-import io.grpc.ManagedChannel;
+import io.grpc.Channel;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -19,7 +19,7 @@ public class RxClient extends AbstractClient {
     }
 
     @Override
-    void run(final ManagedChannel channel, final List<Request> requests) {
+    void run(final Channel channel, final List<Request> requests) {
         final RxServiceStub service = newRxStub(channel);
         Schedulers.start();
         Flowable
