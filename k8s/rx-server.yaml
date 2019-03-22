@@ -22,11 +22,7 @@ kind: Service
 metadata:
   name: rx-server
 spec:
-  clusterIP: None
   ports:
-  - name: rx-server
-    port: 50505
-    targetPort: 50505
-    protocol: TCP
+  - port: 50505
   selector:
     app: rx-server
