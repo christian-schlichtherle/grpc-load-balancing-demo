@@ -27,7 +27,7 @@ implementations of the client and server using
 
 ## Building The Docker Images 
 
-    $ ./build.sh
+    $ make
 
 ## Deploying To A Docker Swarm
 
