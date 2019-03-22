@@ -1,6 +1,6 @@
 package ping;
 
-import io.grpc.ManagedChannel;
+import io.grpc.Channel;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
@@ -19,7 +19,7 @@ public class ReactorClient extends AbstractClient {
     }
 
     @Override
-    void run(final ManagedChannel channel, final List<Request> requests) {
+    void run(final Channel channel, final List<Request> requests) {
         final ReactorServiceStub service = newReactorStub(channel);
         Flux
                 .fromIterable(requests)
