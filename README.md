@@ -99,7 +99,6 @@ To remove the Docker stack:
 This section shows how to deploy the client and server images to a Kubernetes cluster.
 Alternatively, you can also deploy to a Docker swarm instead ([see above](#deploying-to-a-docker-swarm)). 
 
-
 ### Prerequisites
 
 + Pre-built Docker images for the clients and servers ([see above](#building-the-docker-images)).
