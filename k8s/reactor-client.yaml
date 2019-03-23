@@ -6,14 +6,20 @@ spec:
   selector:
     matchLabels:
       app: reactor-client
-  replicas: 1
   template:
     metadata:
       labels:
         app: reactor-client
     spec:
       containers:
-      - name: reactor-client
-        image: reactor-client
-        imagePullPolicy: Never
-        args: [ "reactor-server" ]
+        - args:
+            - ping.ReactorClient
+            - $(NODE_NAME):4140
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: grpc-load-balancing-demo
+          imagePullPolicy: Never
+          name: reactor-client

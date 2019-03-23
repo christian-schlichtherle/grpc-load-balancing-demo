@@ -26,8 +26,7 @@ public class RxClient extends AbstractClient {
                 .fromIterable(requests)
                 .parallel()
                 .runOn(Schedulers.io())
-                // This could be `.flatMap(request -> service.streamingPing(Flowable.just(request)))`, but then the load balancing wouldn't work:
-                .map(request -> service.singlePing(request).blockingGet())
+                .flatMap(request -> service.singlePing(request).toFlowable())
                 .sequential()
                 .groupBy(Response::getServerAddress)
                 .flatMap(group -> group.count().map(count -> format("Received %d responses from server %s.", count, group.getKey())).toFlowable())

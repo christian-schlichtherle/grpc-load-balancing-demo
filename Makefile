@@ -1,3 +1,3 @@
 images:
-	bin/mvnw package
-	bin/build-docker-images
+	./mvnw package
+	docker build -t grpc-load-balancing-demo -f Dockerfile target

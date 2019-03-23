@@ -3,19 +3,21 @@ kind: Deployment
 metadata:
   name: rx-server
 spec:
+  replicas: 4
   selector:
     matchLabels:
       app: rx-server
-  replicas: 4
   template:
     metadata:
       labels:
         app: rx-server
     spec:
       containers:
-      - name: rx-server
-        image: rx-server
-        imagePullPolicy: Never
+        - args:
+            - ping.RxServer
+          image: grpc-load-balancing-demo
+          imagePullPolicy: Never
+          name: rx-server
 ---
 apiVersion: v1
 kind: Service
@@ -23,6 +25,7 @@ metadata:
   name: rx-server
 spec:
   ports:
-  - port: 50505
+    - name: grpc
+      port: 50505
   selector:
     app: rx-server

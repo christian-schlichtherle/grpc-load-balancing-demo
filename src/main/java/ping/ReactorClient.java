@@ -25,8 +25,10 @@ public class ReactorClient extends AbstractClient {
                 .fromIterable(requests)
                 .parallel()
                 .runOn(Schedulers.elastic())
-                // This could be `.composeGroup(service::streamingPing)`, but then the load balancing doesn't work:
-                .map(request -> service.singlePing(request).block())
+                // `composeGroup` looks like a perfect fit here, but it doesn't properly load balance when used with a
+                // Linkerd proxy, so don't use it.
+//                .composeGroup(service::streamingPing)
+                .flatMap(request -> service.singlePing(request))
                 .sequential()
                 .groupBy(Response::getServerAddress)
                 .flatMap(group -> group.count().map(count -> format("Received %d responses from server %s.", count, group.key())))
