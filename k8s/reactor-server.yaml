@@ -13,9 +13,11 @@ spec:
         app: reactor-server
     spec:
       containers:
-      - name: reactor-server
-        image: reactor-server
-        imagePullPolicy: Never
+        - args:
+            - ping.ReactorServer
+          image: grpc-load-balancing-demo
+          imagePullPolicy: Never
+          name: reactor-server
 ---
 apiVersion: v1
 kind: Service
@@ -23,6 +25,6 @@ metadata:
   name: reactor-server
 spec:
   ports:
-  - port: 50505
+    - port: 50505
   selector:
     app: reactor-server
