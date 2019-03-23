@@ -32,6 +32,7 @@ implementations of the client and server using
 ## Deploying To A Kubernetes Cluster
 
 This section shows how to deploy the client and server images to a Kubernetes cluster.
+Alternatively, you can also deploy to a Docker swarm instead ([see above](#deploying-to-a-docker-swarm)). 
 
 ### Prerequisites
 
