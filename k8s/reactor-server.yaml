@@ -22,11 +22,7 @@ kind: Service
 metadata:
   name: reactor-server
 spec:
-  clusterIP: None
   ports:
-  - name: reactor-server
-    port: 50505
-    targetPort: 50505
-    protocol: TCP
+  - port: 50505
   selector:
     app: reactor-server
