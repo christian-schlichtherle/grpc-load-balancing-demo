@@ -30,6 +30,7 @@ abstract class AbstractClient {
         }
         final ManagedChannel channel = ManagedChannelBuilder
                 .forTarget(target)
+                .defaultLoadBalancingPolicy("round_robin")
                 .usePlaintext()
                 .build();
         final CountDownLatch
@@ -47,6 +48,10 @@ abstract class AbstractClient {
             try {
                 do {
                     run(channel, requests);
+
+                    // Required to make the client aware of new servers if the "round_robin" client-side load-balancing
+                    // policy is used and the number of servers is SCALED UP:
+                    channel.enterIdle();
                 } while (!shutdownInitiated.await(2, TimeUnit.SECONDS));
             } finally {
                 channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);

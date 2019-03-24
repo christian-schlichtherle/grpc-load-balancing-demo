@@ -1,19 +1,19 @@
 up: servers-up clients-up
 
-servers-up:
-	kubectl apply --filename reactor-server.yaml
-	kubectl apply --filename rx-server.yaml
-
-clients-up:
-	kubectl apply --filename reactor-client.yaml
-	kubectl apply --filename rx-client.yaml
-
 down: clients-down servers-down
 
-clients-down:
-	kubectl delete --ignore-not-found --filename reactor-client.yaml
-	kubectl delete --ignore-not-found --filename rx-client.yaml
+servers-up:
+	istioctl kube-inject --filename reactor-server.yaml | kubectl apply --filename -
+	istioctl kube-inject --filename rx-server.yaml | kubectl apply --filename -
 
 servers-down:
-	kubectl delete --ignore-not-found --filename reactor-server.yaml
-	kubectl delete --ignore-not-found --filename rx-server.yaml
+	istioctl kube-inject --filename reactor-server.yaml | kubectl delete --ignore-not-found --filename -
+	istioctl kube-inject --filename rx-server.yaml | kubectl delete --ignore-not-found --filename -
+
+clients-up:
+	istioctl kube-inject --filename reactor-client.yaml | kubectl apply --filename -
+	istioctl kube-inject --filename rx-client.yaml | kubectl apply --filename -
+
+clients-down:
+	istioctl kube-inject --filename reactor-client.yaml | kubectl delete --ignore-not-found --filename -
+	istioctl kube-inject --filename rx-client.yaml | kubectl delete --ignore-not-found --filename -

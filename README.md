@@ -32,12 +32,14 @@ implementations of the client and server using
 ## Deploying To A Kubernetes Cluster
 
 This section shows how to deploy the client and server images to a Kubernetes cluster.
-Alternatively, you can also deploy to a Docker swarm instead ([see above](#deploying-to-a-docker-swarm)). 
 
 ### Prerequisites
 
 + Pre-built Docker images for the clients and servers ([see above](#building-the-docker-images)).
-+ A Kubernetes cluster - one node is enough. If not already available, use Docker Desktop.
++ A Kubernetes cluster - one node is enough.
+  If not already available, use Docker Desktop.
++ Istio installation in your K8s cluster.
+  [Quick Start Evaluation Install](https://istio.io/docs/setup/kubernetes/install/kubernetes/) is good enough.
 
 ### Deploying The Stack
 
@@ -55,7 +57,7 @@ Repeat until the AVAILABLE numbers match the DESIRED numbers.
 
 To watch the log of the Reactor-client:
 
-    $ kubectl logs --follow deployment/reactor-client
+    $ kubectl logs --follow deployment/reactor-client reactor-client
     09:55:12.072 [main] INFO  ping.ReactorClient - Received 24 responses from server 10.0.17.5.
     09:55:12.072 [main] INFO  ping.ReactorClient - Received 24 responses from server 10.0.17.6.
     09:55:12.072 [main] INFO  ping.ReactorClient - Received 28 responses from server 10.0.17.7.
@@ -71,7 +73,7 @@ it has processed.
 
 To watch the log of the Rx-client:
 
-    $ kubectl logs --follow deployment/rx-client 
+    $ kubectl logs --follow deployment/rx-client rx-client
 
 ### Scaling the Servers
 
@@ -93,3 +95,7 @@ When following this example, the logging output will change accordingly.
 To remove the Docker stack:
 
     $ make --directory k8s down
+
+Note that this will not remove the Istio installation.
+To do this, follow the instructions in the 
+[Quick Start Evaluation Install](https://istio.io/docs/setup/kubernetes/install/kubernetes/) documentation.
