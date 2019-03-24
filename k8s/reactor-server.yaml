@@ -24,7 +24,6 @@ kind: Service
 metadata:
   name: reactor-server
 spec:
-  clusterIP: None
   ports:
     - port: 50505
   selector:
