@@ -37,7 +37,12 @@ Alternatively, you can also deploy to a Docker swarm instead ([see above](#deplo
 ### Prerequisites
 
 + Pre-built Docker images for the clients and servers ([see above](#building-the-docker-images)).
-+ A Kubernetes cluster - one node is enough. If not already available, use Docker Desktop.
++ A Kubernetes cluster - one node is enough. 
+  If not already available, use Docker Desktop.
++ Linkerd CLI installed.
+  On macos, you can use `brew install linkerd`.
+  Alternatively, you can follow the 
+  [installation instructions](https://linkerd.io/2/getting-started/#step-1-install-the-cli) in the documentation.
 
 ### Deploying The Stack
 
@@ -87,6 +92,20 @@ When you increase the number of server instances however, the client will only _
     $ kubectl scale --replicas 4 deployment/rx-server
 
 When following this example, the logging output will change accordingly.
+
+### Accessing the Dashboard
+
+Linkerd 2.x ships with a comprehensive Dashboard for monitoring and diagnosis.
+To access it:
+
+    $ linkerd dashboard
+    Linkerd dashboard available at:
+    http://127.0.0.1:59980
+    Grafana dashboard available at:
+    http://127.0.0.1:59980/grafana
+    Opening Linkerd dashboard in the default browser
+
+Keep an eye on the Grafana dashboards while scaling up and down the server instances.
 
 ### Removing the Stack
 
