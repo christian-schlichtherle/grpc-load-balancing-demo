@@ -1,5 +1,3 @@
-images: target/grpc-load-balancing-demo-*.jar
-	bin/build-docker-images
-
-target/grpc-load-balancing-demo-*.jar:
-	bin/mvnw package
+images:
+	./mvnw package
+	docker build -t grpc-load-balancing-demo -f Dockerfile target
