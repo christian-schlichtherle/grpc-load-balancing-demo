@@ -1,10 +1,7 @@
-all: package images
+all: package image
 
-package:
-	./mvnw package
+clean package:
+	./mvnw $@
 
-clean:
-	./mvnw clean
-
-images:
+image:
 	docker build -t grpc-load-balancing-demo -f Dockerfile target
