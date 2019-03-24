@@ -13,13 +13,13 @@ servers-up:
 	linkerd inject rx-server.yaml | kubectl apply --filename -
 
 servers-down:
-	kubectl delete --ignore-not-found --filename reactor-server.yaml
-	kubectl delete --ignore-not-found --filename rx-server.yaml
+	linkerd inject reactor-server.yaml | kubectl delete --ignore-not-found --filename -
+	linkerd inject rx-server.yaml | kubectl delete --ignore-not-found --filename -
 
 clients-up:
 	linkerd inject reactor-client.yaml | kubectl apply --filename -
 	linkerd inject rx-client.yaml | kubectl apply --filename -
 
 clients-down:
-	kubectl delete --ignore-not-found --filename reactor-client.yaml
-	kubectl delete --ignore-not-found --filename rx-client.yaml
+	linkerd inject reactor-client.yaml | kubectl delete --ignore-not-found --filename -
+	linkerd inject rx-client.yaml | kubectl delete --ignore-not-found --filename -
