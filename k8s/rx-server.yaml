@@ -24,6 +24,7 @@ kind: Service
 metadata:
   name: rx-server
 spec:
+  clusterIP: None
   ports:
     - port: 50505
   selector:
